@@ -4,13 +4,25 @@ const mongoose = require('mongoose')
 
 const app = express()
 
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+
+
 
 
 async function start() {
-    const url = `mongodb+srv://mnjoyan:duQNDBCBlLC0eUBY@cluster0.zxfxt.mongodb.net/mevn?retryWrites=true&w=majority`
-    mongoose.connect(url, {})
+    try {
+        const url = `mongodb+srv://mnjoyan2:QcW1yzsb8InU7Rgg@cluster0.zxfxt.mongodb.net/mevnshop?retryWrites=true&w=majority`
+        await mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true})
+        app.listen(5000, () => {
+            console.log('running...');
+        })
+    } catch (err) {
+        console.log(err)
+    }
+    
 }
 
-app.listen(5000, () => {
-    console.log('running...');
-})
+start()
+
+
