@@ -1,11 +1,11 @@
 const router = require('express-promise-router')()
 
-const { productsController } = require('../controllers')
+const { categoriesController } = require('../controllers')
 
-router.route('/:id').get(productsController.getOne)
-router.route('/').get(productsController.getAll)
-router.route('/').post(productsController.create)
-router.route('/:id').put(productsController.update)
-router.route('/:id').delete(productsController.delete)  
+router.route('/:id').get(categoriesController.getOne)
+router.route('/').get(categoriesController.getAll)
+router.route('/').post(categoriesController.create)
+router.route('/:id').put(categoriesController.update)
+router.route('/:id').delete(categoriesController.delete)  
 
 module.exports = router

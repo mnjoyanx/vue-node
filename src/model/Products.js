@@ -1,7 +1,7 @@
 const { Schema, model, Schema: {Types: { ObjectId }} } = require('mongoose')
 
 
-const categorySchema = new Schema({
+const productSchema = new Schema({
     title: {
         type: String,
         default: ''
@@ -22,13 +22,16 @@ const categorySchema = new Schema({
         required: true
     },
 
-    categoryId: [
-        {
+    imgUrl: {
+        type: String,
+        default: 'no image'
+    },
+
+    categoryId: {
             type: ObjectId,
             ref: 'Product'
         }
-    ]
 })
 
 
-module.exports = model('Category', categorySchema)
+module.exports = model('Product', productSchema)
