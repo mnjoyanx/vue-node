@@ -27,6 +27,11 @@ const productSchema = new Schema({
         default: 'no image'
     },
 
+    created_at: {
+        type: Date,
+        default: Date.now()
+    },
+
     categoryId: {
             type: ObjectId,
             ref: 'Product'
