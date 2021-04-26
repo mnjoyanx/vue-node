@@ -12,10 +12,10 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
 
-app.use(function (req, res, next) {
+app.use(function (req, res, next) { 
 
     // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:9999');
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:9999'); 
 
     // Request methods you wish to allow
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
@@ -44,14 +44,14 @@ async function start() {
         
         const url = `mongodb+srv://mnjoyan:2EZBGrRhWQYNBTdJ@cluster0.1bwis.mongodb.net/mevnShop?retryWrites=true&w=majority`
         await mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true})
-        app.listen(5000, () => {
+        app.listen(3000, () => {
             console.log('running...');
         })
     } catch (err) {
         console.log(err)
-    }
+    }  
     
-}
+} 
 
 start()
 

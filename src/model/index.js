@@ -3,6 +3,6 @@ const Category = require('./Category')
 
 
 module.exports = {
-    Prodcut,
+    Prodcut, 
     Category
 }

@@ -2,7 +2,7 @@ const boom = require("@hapi/boom");
 
 const mainCrud = (model) => ({
   async getOne({params: {id}}, res) {
-        try {
+  try {
           const item = await model.findById(id)
           return res.status(200).send(item)
     } catch (err) {
@@ -10,13 +10,13 @@ const mainCrud = (model) => ({
     }
   },
   async getAll(req, res) {
-      try {
-        const allItems = await model.find()
+    try {
+    const allItems = await model.find()
         return res.status(200).send(allItems)
-    } catch (err) {
+    } catch (err) { 
       return res.status(400).send( boom.boomify(err))
     }
-  },
+  }, 
   async create({body}, res) {
       try {
           const item = new model(body)
