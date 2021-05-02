@@ -1,6 +1,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
+require('dotenv').config()
 
 const routes  = require('./src/routes/index.js')
 
@@ -42,7 +43,7 @@ routes.routes.forEach(item => {
 async function start() {
     try {
         
-        const url = `mongodb+srv://mnjoyan:2EZBGrRhWQYNBTdJ@cluster0.1bwis.mongodb.net/mevnShop?retryWrites=true&w=majority`
+        const url = process.env.MONGO_URI
         await mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true})
         app.listen(3000, () => {
             console.log('running...');
@@ -52,7 +53,7 @@ async function start() {
     }  
     
 } 
-
+ 
 start()
 
 
