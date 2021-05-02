@@ -1,9 +1,11 @@
 const { User } = require('../model')
 const bcrypt = require('bcrypt');
+const {validationResult} = require('express-validator')
 
 
 const register = async (req, res) => {
     const { username, email, password } = req.body
+    const errors = validationResult(req)
 
     try {
         const usernamecandidate = await User.findOne({ username })
@@ -19,6 +21,11 @@ const register = async (req, res) => {
             return res.status(403).send({
                 message: "the username has already been taken"
             })
+        }
+
+        if (!errors.isEmpty()) {
+            console.log(errors)
+            return res.status(400).json({ message: 'something went wrong', errors})
         }
 
         const hashedPassword = await bcrypt.hash(password, 7)
