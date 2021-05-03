@@ -34,7 +34,6 @@ const register = async (req, res) => {
         newuser.save()
         res.json({message: "user has been signed up successfuly"})
     } catch (err) {
-        console.log(err)
        res.json(err)
     }
 }

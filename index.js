@@ -5,6 +5,7 @@ require('dotenv').config()
 
 const routes  = require('./src/routes/index.js')
 const registerRouter = require('./src/routes/register')
+const loginRouter = require('./src/routes/login')
 
 
 const app = express()
@@ -38,12 +39,12 @@ routes.routes.forEach(item => {
 })
 
 app.use('/api/v1/auth', registerRouter)
+app.use('/api/v1/auth', loginRouter)
 
 const expressListRoutes = require('express-list-routes');
 
  
 expressListRoutes(app, { prefix: '/' });
-
 
 
 async function start() {
