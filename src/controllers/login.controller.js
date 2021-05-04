@@ -1,21 +1,20 @@
-const { User } = require("../model");
+const { User, Token } = require("../model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
-const generateAccessToken = (id, email) => {
+const generateAccessToken = (id, email, secret) => {
   const payload = {
     id,
     email,
   };
 
-  return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "12h" });
+  return jwt.sign(payload, secret, { expiresIn: "12h" });
 };
 
 const login = async (req, res) => {
   const { email, password } = req.body;
 
-  console.log(User, "usssser");
   try {
     const candidate = await User.findOne({ email });
 
@@ -33,10 +32,15 @@ const login = async (req, res) => {
       });
     }
 
-    const token = generateAccessToken(candidate._id, candidate.email);
+    const token = generateAccessToken(candidate._id, candidate.email, process.env.JWT_SECRET);
+    const refreshToken = generateAccessToken(candidate._id, candidate.email, process.env.JWT_SECRET_REFRESH)
+
+    const tokenM = new Token({ token: refreshToken })
+    await tokenM.save()
 
     return res.status(200).send({
       token,
+      refreshToken,
       candidate,
     });
   } catch (err) {
