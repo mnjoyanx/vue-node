@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
+
 const generateAccessToken = (id, email, secret) => {
   const payload = {
     id,
@@ -35,7 +36,7 @@ const login = async (req, res) => {
     const token = generateAccessToken(candidate._id, candidate.email, process.env.JWT_SECRET);
     const refreshToken = generateAccessToken(candidate._id, candidate.email, process.env.JWT_SECRET_REFRESH)
 
-    const tokenM = new Token({ token: refreshToken })
+    const tokenM = await new Token({ token: refreshToken })
     await tokenM.save()
 
     return res.status(200).send({
