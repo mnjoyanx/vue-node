@@ -4,14 +4,48 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 
-const generateAccessToken = (id, email, secret) => {
+const generateAccessToken = (id, email, secret, time) => {
   const payload = {
     id,
     email,
   };
 
-  return jwt.sign(payload, secret, { expiresIn: "12h" });
+  return jwt.sign(payload, secret, { expiresIn: time });
 };
+
+
+const refreshToken = async (req, res) => {
+  const {refreshToken} = req.body
+  // ete refresh token chka request-i mej
+  if (!refreshToken) {
+    return res.status(403).send({
+      message: "Access denied"
+    })
+  }
+
+  const currentToken = await Token.findOne({ token: refreshToken })
+  
+  if (!currentToken) {
+    return res.status(403).send({
+      message: "Access denied"
+    })
+  }
+
+  jwt.verify(refreshToken, process.env.JWT_SECRET_REFRESH, (err, user) => {
+    if (err) {
+        return res.status(403).send({
+            message: "Access denied"
+        })
+    }
+    const {_id, email} = user
+    generateAccessToken(_id, email, process.env.JWT_SECRET, "15m")
+    return res.status(200).send({
+      message: "OK"
+    })
+
+    })
+    
+}
 
 const login = async (req, res) => {
   const { email, password } = req.body;
@@ -33,8 +67,8 @@ const login = async (req, res) => {
       });
     }
 
-    const token = generateAccessToken(candidate._id, candidate.email, process.env.JWT_SECRET);
-    const refreshToken = generateAccessToken(candidate._id, candidate.email, process.env.JWT_SECRET_REFRESH)
+    const token = generateAccessToken(candidate._id, candidate.email, process.env.JWT_SECRET, "15m");
+    const refreshToken = generateAccessToken(candidate._id, candidate.email, process.env.JWT_SECRET_REFRESH, "30d")
 
     const tokenM = await new Token({ token: refreshToken })
     await tokenM.save()
