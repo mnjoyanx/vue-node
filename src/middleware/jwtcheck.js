@@ -7,9 +7,10 @@ const checkJwt = (req, res, next) => {
     console.log(req.headers)
     if (!authorization) return res.status(401).send("Access denied. No token provided")
 
-    try {    
+    try {
         const token = authorization.split(' ')[1]
         const decoded = verify(token, process.env.JWT_SECRET) 
+        console.log(decoded, 123)
         req.user = decoded
         next()
         
