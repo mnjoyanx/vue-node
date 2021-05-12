@@ -16,17 +16,18 @@ const generateAccessToken = (id, email, secret, time) => {
 
 const logout = async (req, res) => {
   
-  const token = req.headers["Authorization"] // stanum enq token-y headerneric
+  const {refreshToken} = req.body 
   
-  const user = jwt.decode(token, process.env.JWT_SECRET_REFRESH) // decode enq anum stacac tokeny vor ira user._id-ov stugenq token modelum ka tenc token te che
+  // const user = jwt.decode(token, process.env.JWT_SECRET_REFRESH) // decode enq anum stacac tokeny vor ira user._id-ov stugenq token modelum ka tenc token te che
 
-  const candidate = await Token.findOne({token: user._id})
+  const candidate = await Token.findOne({token: refreshToken})
 
   if(!candidate) {
     return res.status(403).send({
       message: "User is not authorized"
     })
   }
+
 
   await Token.findByIdAndDelete(candidate._id)
 
@@ -89,17 +90,35 @@ const login = async (req, res) => {
       });
     }
 
-    const token = generateAccessToken(candidate._id, candidate.email, process.env.JWT_SECRET, "1m");
+
+    const token = generateAccessToken(candidate._id, candidate.email, process.env.JWT_SECRET, "15m");
     const refreshToken = generateAccessToken(candidate._id, candidate.email, process.env.JWT_SECRET_REFRESH, "30d")
+
+    const foundToken = await Token.findOne({ user: candidate._id })
+
+    
+    if (foundToken) { // ete ka tenc token uremn update enq anum ete che stexcum enq nory
+      await Token.findByIdAndUpdate({ token: refreshToken, user: candidate._id })
+
+      console.log('found')
+      
+      return res.status(200).send({
+      token,
+      refreshToken,
+      candidate,
+    });
+    }
 
     const tokenM = await new Token({ token: refreshToken })
     await tokenM.save()
+
 
     return res.status(200).send({
       token,
       refreshToken,
       candidate,
     });
+    
   } catch (err) {
     console.log("catch");
     return res.status(403).send({
